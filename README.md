@@ -12,3 +12,8 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 ### `npm run deploy`
 
 Deploys the current branch to [https://MatthewMyWu.github.io/MoviePractice](https://MatthewMyWu.github.io/MoviePractice)
+
+
+### `sass --watch ./src/sass/App.scss ./src/App.css`
+
+Compiles sass files into css
