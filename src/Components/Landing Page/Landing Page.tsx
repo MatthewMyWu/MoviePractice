@@ -5,9 +5,9 @@ function LandingPage() {
   return (
     <div>
       <h1>This should be the landing page</h1>
-      <Link to="/Search">Go to Search Page</Link>
+      <Link to="/MoviePractice/Search">Go to Search Page</Link>
       <br></br>
-      <Link to="/Media">Go to Media Page</Link>
+      <Link to="/MoviePractice/Media">Go to Media Page</Link>
     </div>
   );
 }

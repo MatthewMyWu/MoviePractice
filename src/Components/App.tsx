@@ -12,9 +12,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage></LandingPage>}></Route>
-          <Route path="/search" element={<SearchPage></SearchPage>}></Route>
-          <Route path="/media" element={<MediaPage></MediaPage>}></Route>
+          <Route path="/MoviePractice" element={<LandingPage></LandingPage>}></Route>
+          <Route path="/MoviePractice/search" element={<SearchPage></SearchPage>}></Route>
+          <Route path="/MoviePractice/media" element={<MediaPage></MediaPage>}></Route>
         </Routes>
       </BrowserRouter>
     </div>

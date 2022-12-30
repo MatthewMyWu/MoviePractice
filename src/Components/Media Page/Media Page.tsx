@@ -5,9 +5,9 @@ function MediaPage() {
   return (
     <div>
       <h1>This should be the media page</h1>
-      <Link to="/Search">Go to Search Page</Link>
+      <Link to="/MoviePractice/Search">Go to Search Page</Link>
       <br></br>
-      <Link to="/">Go to Landing Page</Link>
+      <Link to="/MoviePractice">Go to Landing Page</Link>
     </div>
   );
 }
