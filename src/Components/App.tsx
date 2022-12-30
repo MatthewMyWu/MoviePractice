@@ -1,9 +1,10 @@
 import React from 'react';
-import TestPage from './TestPage';
 import {
   BrowserRouter, Route, Routes
 } from "react-router-dom";
-import TestPage2 from './TestPage2';
+import LandingPage from './Landing Page/Landing Page';
+import MediaPage from './Media Page/Media Page';
+import SearchPage from './Search Page/Search Page';
 
 
 function App() {
@@ -11,8 +12,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<TestPage></TestPage>}></Route>
-          <Route path="/TestPage2" element={<TestPage2></TestPage2>}></Route>
+          <Route path="/" element={<LandingPage></LandingPage>}></Route>
+          <Route path="/search" element={<SearchPage></SearchPage>}></Route>
+          <Route path="/media" element={<MediaPage></MediaPage>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
