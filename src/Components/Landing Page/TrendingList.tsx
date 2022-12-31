@@ -1,6 +1,7 @@
 import TrendingCarousel from "./TrendingCarousel";
 import React, { useState } from "react";
-import { IMediaDisplayInfo, MockMediaRetriever } from "../../API/MediaRetriever";
+import { IMediaDisplayInfo } from "../../API/MediaRetriever";
+import { MockMediaRetriever } from "../../API/MockMediaRetriever";
 
 type TrendingListProps = {
     mediaType: string;
@@ -21,9 +22,9 @@ function TrendingList({ mediaType }: TrendingListProps) {
     }, [mediaType]);
 
     return (
-        <div>
-            <h1>Top Trending { mediaType }</h1>
-            <TrendingCarousel items={ items } />
+        <div className="landing-page-trending-list">
+            <h1 className="landing-page-list-header">Top Trending { mediaType }</h1>
+            <TrendingCarousel items={ items }/>
         </div>
     );
 }

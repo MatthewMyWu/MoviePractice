@@ -7,7 +7,7 @@ type TrendingCarouselProps = {
 
 function TrendingCarousel({ items }: TrendingCarouselProps) {
     return (
-        <div>
+        <div className="landing-page-carousel">
             {items.map(item => <TrendingItem item={item} key={item.id} />)}
         </div>
     );

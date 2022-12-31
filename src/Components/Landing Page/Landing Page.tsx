@@ -4,7 +4,7 @@ import TrendingList from './TrendingList';
 
 function LandingPage() {
   return (
-    <div>
+    <div className="landing-page-container">
       <h1>This should be the landing page</h1>
       <Link to="/MoviePractice/Search">Go to Search Page</Link>
       <br></br>
