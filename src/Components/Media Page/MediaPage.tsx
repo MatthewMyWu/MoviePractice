@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import { Statics } from '../App';
 
 function MediaPage() {
   return (
@@ -8,6 +9,9 @@ function MediaPage() {
       <Link to="/MoviePractice/Search">Go to Search Page</Link>
       <br></br>
       <Link to="/MoviePractice">Go to Landing Page</Link>
+      <Link to={Statics.SEARCH_PATH}>Go to Search Page</Link>
+      <br></br>
+      <Link to={Statics.ROOT_PATH}>Go to Landing Page</Link>
     </div>
   );
 }
