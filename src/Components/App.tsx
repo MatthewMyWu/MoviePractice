@@ -15,7 +15,6 @@ export class Statics {
 }
 
 
-
 function App() {
   return (
     <div className="App">

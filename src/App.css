@@ -53,4 +53,33 @@ table {
   border-spacing: 0;
 }
 
+.landing-page-trending-list {
+  margin-bottom: 5vh;
+}
+.landing-page-trending-list .landing-page-list-header {
+  font-size: 54px;
+  color: white;
+  font-weight: bold;
+}
+.landing-page-trending-list .landing-page-carousel {
+  display: flex;
+  flex-direction: row;
+}
+.landing-page-trending-list .landing-page-item-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+}
+.landing-page-trending-list .landing-page-item-container .landing-page-image-container img {
+  width: 60%;
+  height: auto;
+  position: relative;
+  left: 20%;
+}
+.landing-page-trending-list .landing-page-item-container p {
+  color: white;
+}
+
 /*# sourceMappingURL=App.css.map */
