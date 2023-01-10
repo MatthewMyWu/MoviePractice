@@ -30,8 +30,8 @@ export const enum MediaFilter {
 }
 
 export interface IMediaRetriever {
-    getTrendingMovies(startIndex: number, endIndex: number): IMediaDisplayInfo[];
-    getTrendingTV(startIndex: number, endIndex: number): IMediaDisplayInfo[];
-    search(searchText: string, filter: FilterOption, mediaFilter: MediaFilter ): IMediaDisplayInfo[];
-    getMediaByID(id: number): IMediaFullInfo;
+    getTrendingMovies(startIndex: number, endIndex: number): Promise<IMediaDisplayInfo[]>;
+    getTrendingTV(startIndex: number, endIndex: number): Promise<IMediaDisplayInfo[]>;
+    search(searchText: string, filter: FilterOption, mediaFilter: MediaFilter ): Promise<IMediaDisplayInfo[]>;
+    getMediaByID(id: number): Promise<IMediaFullInfo>;
 }
