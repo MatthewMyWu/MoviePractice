@@ -2,7 +2,6 @@ import TrendingCarousel from "./TrendingCarousel";
 import React, { useState } from "react";
 import { IMediaDisplayInfo, IMediaRetriever } from "../../API/MediaRetriever";
 import { MockMediaRetriever } from "../../API/MockMediaRetriever";
-import { MediaRetrieverBasic } from "../../API/MediaRetrieverBasic";
 
 type TrendingListProps = {
     mediaType: string;
