@@ -26,7 +26,7 @@ export const enum FilterOption {
 }
 
 export const enum MediaFilter {
-    Movie, TV, All
+    Movie = "movie", TV = "tv", All = "all"
 }
 
 export interface IMediaRetriever {

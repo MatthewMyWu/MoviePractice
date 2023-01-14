@@ -1,7 +1,5 @@
 import { FilterOption, IMediaDisplayInfo, IMediaFullInfo, IMediaRetriever, MediaFilter } from "./MediaRetriever";
 import { MockMediaRetriever } from "./MockMediaRetriever";
-
-
 interface ITrendingResponse {
     "page": number,
     "results": ITrendingResult[],
@@ -32,7 +30,7 @@ interface ITrendingResult {
 
 export class MediaRetrieverBasic implements IMediaRetriever {
     getTrendingMovies(startIndex: number, endIndex: number): Promise<IMediaDisplayInfo[]> {
-        return fetchTrending().then(function (response: ITrendingResponse) {
+        return fetchTrending(MediaFilter.Movie, 1).then(function (response: ITrendingResponse) {
             const ret: IMediaDisplayInfo[] = [];
             let i = 0;
             for (const result of response.results) {
@@ -66,8 +64,14 @@ export class MediaRetrieverBasic implements IMediaRetriever {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function fetchTrending(): Promise<ITrendingResponse> {
-    return fetch("https://api.themoviedb.org/3/trending/all/day?api_key=d68e3ec8654a9460714cdb6c335ae029&media_type=all&time_window=week", {
+function fetchTrending(mediaType: MediaFilter, pageNumber: number): Promise<ITrendingResponse> {
+    const API_Key: string = "d68e3ec8654a9460714cdb6c335ae029";
+    const media_type: string = mediaType;
+    const time_window: string = "week";
+    const page: number = pageNumber;
+    const endpoint: string = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_Key}&media_type=${media_type}&time_window=${time_window}&page=${page}`;
+
+    return fetch(endpoint, {
         "method": "GET",
         "headers": {}
     })
