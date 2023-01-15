@@ -33,29 +33,28 @@ const PAGE_SIZE: number = 20;
 
 export class MediaRetrieverBasic implements IMediaRetriever {
     getTrendingMovies(startIndex: number, endIndex: number): Promise<IMediaDisplayInfo[]> {
-        const trendingList: IMediaDisplayInfo[] = [];
-        const startPage: number = Math.floor(startIndex / PAGE_SIZE);
-        const endPage: number = Math.floor(endIndex / PAGE_SIZE);
-        const responseResults: Promise<IMediaDisplayInfo[]>[] = [];
+        const startPage: number = Math.floor(startIndex / PAGE_SIZE) + 1; // Pages are not 0 based indexing
+        const endPage: number = Math.floor(endIndex / PAGE_SIZE) + 1;
+        const responseResults: Promise<IMediaDisplayInfo[]>[] = []; // All promises from fetch responses
 
-        responseResults.push(fetchTrending(MediaFilter.Movie, 1)
-            .then(function (response: ITrendingResponse) {
-                const ret: IMediaDisplayInfo[] = [];
-                for (const result of response.results) {
-                    ret.push(TrendingResultToMediaDisplayInfo(result));
-                }
-                return ret;
-            }));
-        responseResults.push(fetchTrending(MediaFilter.Movie, 2)
-            .then(function (response: ITrendingResponse) {
-                const ret: IMediaDisplayInfo[] = [];
-                for (const result of response.results) {
-                    ret.push(TrendingResultToMediaDisplayInfo(result));
-                }
-                return ret;
-            }));
+        // Add each fetch request results to response results
+        for (let page = startPage; page <= endPage; page++) {
 
-            return Promise.all(responseResults).then(data => data.flat());
+            responseResults.push(fetchTrending(MediaFilter.Movie, page)
+                .then(function (response: ITrendingResponse) {
+                    let currentIndex = (page - 1) * PAGE_SIZE;
+                    const results: IMediaDisplayInfo[] = [];
+                    for (const result of response.results) {
+                        results.push(TrendingResultToMediaDisplayInfo(result));
+                        currentIndex++;
+                        if (currentIndex > endIndex) break;
+                    }
+                    return results;
+                }));
+
+        }
+
+        return Promise.all(responseResults).then(data => data.flat());
     }
 
     getTrendingTV(startIndex: number, endIndex: number): Promise<IMediaDisplayInfo[]> {
