@@ -16,8 +16,8 @@ function TrendingList({ mediaType }: TrendingListProps) {
         //const api: IMediaRetriever = new MockMediaRetriever();
         const api: IMediaRetriever = new MediaRetrieverBasic();
         const mediaList: Promise<IMediaDisplayInfo[]> = mediaType === "movie"
-            ? api.getTrendingMovies(0, 0)
-            : api.getTrendingTV(0, 0);
+            ? api.getTrendingMovies(0, 5)
+            : api.getTrendingTV(0, 5);
 
         mediaList.then(function(result) {
             console.log(result);

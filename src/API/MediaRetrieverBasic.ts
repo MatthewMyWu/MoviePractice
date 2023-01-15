@@ -1,14 +1,14 @@
 import { FilterOption, IMediaDisplayInfo, IMediaFullInfo, IMediaRetriever, MediaFilter } from "./MediaRetriever";
 import { MockMediaRetriever } from "./MockMediaRetriever";
 
-interface ITrendingResponse {
+interface IPopularResponse {
     "page": number,
-    "results": ITrendingResult[],
+    "results": IPopularMovieResult[] | IPopularTVResult[],
     "total_pages": number,
     "total_results": number
 }
 
-interface ITrendingResult {
+interface IPopularMovieResult {
     "adult": boolean,
     "backdrop_path": string,
     "id": number,
@@ -26,6 +26,22 @@ interface ITrendingResult {
     "vote_count": number
 }
 
+interface IPopularTVResult {
+    "backdrop_path": string,
+    "first_air_date": string,
+    "genre_ids": number[]
+    "id": number,
+    "name": string,
+    "origin_country": string[],
+    "original_language": string,
+    "original_name": string,
+    "overview": string,
+    "popularity": number,
+    "poster_path": string,
+    "vote_average": number,
+    "vote_count": number
+}
+
 const PAGE_SIZE: number = 20;
 
 
@@ -33,33 +49,11 @@ const PAGE_SIZE: number = 20;
 
 export class MediaRetrieverBasic implements IMediaRetriever {
     getTrendingMovies(startIndex: number, endIndex: number): Promise<IMediaDisplayInfo[]> {
-        const startPage: number = Math.floor(startIndex / PAGE_SIZE) + 1; // Pages are not 0 based indexing
-        const endPage: number = Math.floor(endIndex / PAGE_SIZE) + 1;
-        const responseResults: Promise<IMediaDisplayInfo[]>[] = []; // All promises from fetch responses
-
-        // Add each fetch request results to response results
-        for (let page = startPage; page <= endPage; page++) {
-
-            responseResults.push(fetchTrending(MediaFilter.Movie, page)
-                .then(function (response: ITrendingResponse) {
-                    let currentIndex = (page - 1) * PAGE_SIZE;
-                    const results: IMediaDisplayInfo[] = [];
-                    for (const result of response.results) {
-                        results.push(TrendingResultToMediaDisplayInfo(result));
-                        currentIndex++;
-                        if (currentIndex > endIndex) break;
-                    }
-                    return results;
-                }));
-
-        }
-
-        return Promise.all(responseResults).then(data => data.flat());
+        return this.getPopular(MediaFilter.Movie, startIndex, endIndex);
     }
 
     getTrendingTV(startIndex: number, endIndex: number): Promise<IMediaDisplayInfo[]> {
-        const mock: IMediaRetriever = new MockMediaRetriever();
-        return mock.getTrendingTV(startIndex, endIndex);
+        return this.getPopular(MediaFilter.TV, startIndex, endIndex);
     }
 
     search(searchText: string, filter: FilterOption, mediaFilter: MediaFilter): Promise<IMediaDisplayInfo[]> {
@@ -71,6 +65,33 @@ export class MediaRetrieverBasic implements IMediaRetriever {
         const mock: IMediaRetriever = new MockMediaRetriever();
         return mock.getMediaByID(id);
     }
+
+    private getPopular(mediaType: MediaFilter, startIndex: number, endIndex: number) {
+        const startPage: number = Math.floor(startIndex / PAGE_SIZE) + 1; // Pages are not 0 based indexing
+        const endPage: number = Math.floor(endIndex / PAGE_SIZE) + 1;
+        const responseResults: Promise<IMediaDisplayInfo[]>[] = []; // All promises from fetch responses
+
+
+        // Add each fetch request results to response results
+        for (let page = startPage; page <= endPage; page++) {
+
+            responseResults.push(fetchTrending(mediaType, page)
+                .then(function (response: IPopularResponse) {
+                    let currentIndex = (page - 1) * PAGE_SIZE;
+                    const results: IMediaDisplayInfo[] = [];
+                    for (const result of response.results) {
+                        results.push(TrendingResultToMediaDisplayInfo(result));
+                        currentIndex++;
+                        if (currentIndex > endIndex)
+                            break;
+                    }
+                    return results;
+                }));
+
+        }
+
+        return Promise.all(responseResults).then(data => data.flat());
+    }
 }
 
 
@@ -79,12 +100,24 @@ export class MediaRetrieverBasic implements IMediaRetriever {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function fetchTrending(mediaType: MediaFilter, pageNumber: number): Promise<ITrendingResponse> {
+function fetchTrending(mediaType: MediaFilter, pageNumber: number): Promise<IPopularResponse> {
     const API_Key: string = "d68e3ec8654a9460714cdb6c335ae029";
-    const media_type: string = mediaType;
-    const time_window: string = "week";
     const page: number = pageNumber;
-    const endpoint: string = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_Key}&media_type=${media_type}&time_window=${time_window}&page=${page}`;
+
+    let endpoint: string;
+    switch (mediaType) {
+        case MediaFilter.Movie:
+            endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${API_Key}&language=en-US&page=${pageNumber}`;
+            break;
+        case MediaFilter.TV:
+            endpoint = `https://api.themoviedb.org/3/tv/popular?api_key=${API_Key}&language=en-US&page=${pageNumber}`;
+            break;
+        default:
+            endpoint = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_Key}&media_type=all&time_window=week&page=${page}`;
+            break;
+    }
+
+    console.log(endpoint);
 
     return fetch(endpoint, {
         "method": "GET",
@@ -92,15 +125,33 @@ function fetchTrending(mediaType: MediaFilter, pageNumber: number): Promise<ITre
     })
         .then(function (res) { return res.json() })
         .then(res => {
-            return res as ITrendingResponse;
+            return res as IPopularResponse;
         })
 }
 
-function TrendingResultToMediaDisplayInfo(result: ITrendingResult): IMediaDisplayInfo {
-    return {
-        "title": result.title,
-        "posterPath": result.poster_path,
-        "id": result.id
+function TrendingResultToMediaDisplayInfo(result: IPopularMovieResult | IPopularTVResult): IMediaDisplayInfo {
+    if (instanceOfIPopularMovieResult(result)) {
+        return {
+            "title": result.title,
+            "posterPath": result.poster_path,
+            "id": result.id
+        }
+    } else {
+        return {
+            "title": result.name,
+            "posterPath": result.poster_path,
+            "id": result.id
+        }
     }
+    
+ 
+}
+
+function instanceOfIPopularMovieResult(object: any): object is IPopularMovieResult {
+    return (Object.keys(object).includes("title"));
+}
+
+function instanceOfIPopularTVResult(object: any): object is IPopularTVResult {
+    return (Object.keys(object).includes("name"));
 }
 
